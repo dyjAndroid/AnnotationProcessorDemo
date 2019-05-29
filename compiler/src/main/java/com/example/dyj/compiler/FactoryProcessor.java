@@ -42,7 +42,6 @@ public class FactoryProcessor extends AbstractProcessor {
         mElementUtils = processingEnv.getElementUtils();
         mFiler = processingEnv.getFiler();
         mMessager = processingEnv.getMessager();
-        System.out.println("FactoryProcessor init...........");
     }
 
     @Override
@@ -85,10 +84,8 @@ public class FactoryProcessor extends AbstractProcessor {
                 groupedClasses.add(fac);
             } catch (IllegalArgumentException e) {
                 error(typeElement, e.getMessage());
-                System.out.println("IllegalArgumentException");
                 return true;
             } catch (IdAlreadyUsedException e) {
-                System.out.println("IdAlreadyUsedException");
                 error(element,
                         "Conflict: The class %s is annotated with @%s with id ='%s' but %s already uses the same id",
                         typeElement.getQualifiedName().toString(), Factory.class.getSimpleName());
@@ -114,14 +111,12 @@ public class FactoryProcessor extends AbstractProcessor {
         if (!classElement.getModifiers().contains(Modifier.PUBLIC)) {
             error(classElement, "The class %s is not public.",
                     classElement.getQualifiedName().toString());
-            System.out.println("The class is not public:" + classElement.getQualifiedName().toString());
             return false;
         }
 
         if (classElement.getModifiers().contains(Modifier.ABSTRACT)) {
-            error(classElement, "The class %s is abstract. You can't annotate abstract classes with @%",
+            error(classElement, "The class %s is abstract. You can't annotate abstract classes with @%s",
                     classElement.getQualifiedName().toString(), Factory.class.getSimpleName());
-            System.out.println("The class is not abstract:" + classElement.getQualifiedName().toString());
             return false;
         }
 
@@ -131,7 +126,6 @@ public class FactoryProcessor extends AbstractProcessor {
                 error(classElement, "The class %s annotated with @%s must implement the interface %s",
                         classElement.getQualifiedName().toString(), Factory.class.getSimpleName(),
                         fac.getQualifiedSuperClassName());
-                System.out.println("The class must implement the interface");
                 return false;
             }
         }
@@ -153,8 +147,8 @@ public class FactoryProcessor extends AbstractProcessor {
     }
 
     private void error(Element element, String msg, Object... args) {
-//        mMessager.printMessage(Diagnostic.Kind.ERROR,
-//                String.format(msg, args),
-//                element);
+        mMessager.printMessage(Diagnostic.Kind.ERROR,
+                String.format(msg, args),
+                element);
     }
 }
