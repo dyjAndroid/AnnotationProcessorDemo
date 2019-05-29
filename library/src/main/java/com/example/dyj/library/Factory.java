@@ -9,13 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface Factory {
 
-    /**
-     * 工厂的名字
-     */
     Class type();
 
-    /**
-     * 对象的唯一Id
-     */
     String id();
 }

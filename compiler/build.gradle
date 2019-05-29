@@ -1,8 +1,10 @@
 apply plugin: 'java'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
+    implementation 'com.squareup:javawriter:2.5.1'
+    implementation 'com.google.auto.service:auto-service:1.0-rc5'
 }
 
 sourceCompatibility = "7"
