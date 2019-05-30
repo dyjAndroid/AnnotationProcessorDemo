@@ -14,5 +14,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "CanonicalName:" + MainActivity.class.getCanonicalName() +
                 ",SimpleName:" + MainActivity.class.getSimpleName());
+        PizzaStore pizzaStore = new PizzaStore();
+        Meal calzone = pizzaStore.order("Calzone");
+        Log.d(TAG, "Pizza price:" + calzone.getPrice());
     }
 }
