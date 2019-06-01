@@ -22,6 +22,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -53,7 +55,7 @@ public class FactoryProcessor extends AbstractProcessor {
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
+        return SourceVersion.RELEASE_6;
     }
 
     @Override
@@ -65,7 +67,6 @@ public class FactoryProcessor extends AbstractProcessor {
 
             if (element.getKind() != ElementKind.CLASS) {
                 error(element, "Only classes can be annotated with @%s", Factory.class.getSimpleName());
-                System.out.println("Only classes can be annotated with");
                 return true;
             }
 
@@ -127,6 +128,22 @@ public class FactoryProcessor extends AbstractProcessor {
                         classElement.getQualifiedName().toString(), Factory.class.getSimpleName(),
                         fac.getQualifiedSuperClassName());
                 return false;
+            }
+        } else {
+            TypeElement currentClass = classElement;
+            while (true) {
+                TypeMirror superclassType = currentClass.getSuperclass();
+                if (superclassType.getKind() == TypeKind.NONE) {
+                    error(classElement, "The class %s annotated with @%s must inherit from %s",
+                            classElement.getQualifiedName().toString(), Factory.class.getSimpleName(),
+                            fac.getQualifiedSuperClassName());
+                    return false;
+                }
+
+                if (superclassType.toString().equals(fac.getQualifiedSuperClassName())) {
+                    break;
+                }
+                currentClass = (TypeElement) mTypeUtils.asElement(superclassType);
             }
         }
 

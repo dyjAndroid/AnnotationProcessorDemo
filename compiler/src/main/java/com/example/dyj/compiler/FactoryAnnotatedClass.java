@@ -10,14 +10,23 @@ public class FactoryAnnotatedClass {
 
     private TypeElement mTypeElement;
 
+    /**
+     * Factory 注解中type类的全称：包名+类名
+     */
     private String mQualifiedSuperClassName;
-
+    /**
+     * Factory 注解中type类的名字：类名
+     */
     private String mSimpleTypeName;
-
+    /**
+     * Factory 注解中的Id
+     */
     private String mId;
 
     public FactoryAnnotatedClass(TypeElement typeElement) throws IllegalArgumentException {
         mTypeElement = typeElement;
+
+        //拿到注解信息@Factory
         Factory factory = typeElement.getAnnotation(Factory.class);
         mId = factory.id();
         if ("".equals(mId)){
